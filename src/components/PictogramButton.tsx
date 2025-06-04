@@ -1,6 +1,7 @@
-import { TouchableOpacity, Text, StyleSheet, Image } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, Image, Dimensions, useWindowDimensions, View } from 'react-native';
 import * as Speech from 'expo-speech';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { SpaceTheme } from '../styles/theme';
 
 type PictogramButtonProps = {
     label: string;
@@ -17,8 +18,10 @@ export default function PictogramButton({
     isSelected,
     isSelecting,
     onLongPress,
-    onSelect
+    onSelect,
 }: PictogramButtonProps) {
+    const { width, height } = useWindowDimensions();
+    const isLandscape = width > height;
 
     const speak = () => {
         Speech.speak(label);
@@ -38,15 +41,18 @@ export default function PictogramButton({
             style={[
                 styles.button,
                 isSelected ? styles.selected : null,
+                isLandscape && styles.landscapeButton,
             ]}
         >
-            {imgUrl && <Image source={{ uri: imgUrl }} style={styles.image} />}
+            <View style={styles.imgContainer}>
+                {imgUrl && <Image source={{ uri: imgUrl }} style={styles.image} />}
+            </View>
             <Text style={styles.text}>{label}</Text>
             {isSelecting && (
                 <MaterialIcons
                     name={isSelected ? 'check-circle' : 'radio-button-unchecked'}
-                    size={20}
-                    color={isSelected ? 'green' : 'gray'}
+                    size={30}
+                    color={isSelected ? SpaceTheme.colors.deepSpaceLight : SpaceTheme.colors.deepSpace}
                     style={styles.checkIcon}
                 />
             )}
@@ -56,28 +62,33 @@ export default function PictogramButton({
 const styles = StyleSheet.create({
     button: {
         flex: 1,
-        backgroundColor: '#d4d4d4',
+        aspectRatio: 1,
+        backgroundColor: SpaceTheme.colors.nebulaEdge,
         margin: 8,
-        paddingTop: 25,
-        paddingBottom: 20,
-        paddingLeft: 20,
-        paddingRight: 20,
         borderRadius: 12,
+        borderColor: SpaceTheme.colors.white,
+        borderWidth: 5,
         alignItems: 'center',
         justifyContent: 'center',
         elevation: 3,
-        shadowColor: '#000',
+        shadowColor: SpaceTheme.colors.black,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
         shadowRadius: 3,
         position: 'relative',
-        height: 175
+    },
+    landscapeButton: {
+        maxHeight: 250,
     },
     text: {
         fontSize: 18,
-        color: '#000',
+        color: SpaceTheme.colors.black,
         fontWeight: 'bold',
-        paddingTop: 5,
+    },
+    imgContainer: {
+        width: '78%',
+        height: '78%',
+        margin: 0,
     },
     image: {
         width: '100%',
@@ -85,13 +96,13 @@ const styles = StyleSheet.create({
         borderRadius: 8,
     },
     selected: {
-        borderColor: '#1d91c9',
+        borderColor: SpaceTheme.colors.borders,
         borderWidth: 2,
-        backgroundColor: '#e6f7ff',
+        backgroundColor: SpaceTheme.colors.nebulaEdgeDark,
     },
     checkIcon: {
         position: 'absolute',
-        top: 8,
-        right: 8,
+        top: -5,
+        right: -5,
     },
 });

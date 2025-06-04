@@ -1,13 +1,16 @@
-import { useNavigation } from "@react-navigation/native";
 import { usePictogramStore } from "../../stores/usePictogramStore";
 import { usePictogramHandler } from "../../hooks/usePictogramHandler";
-import { FlatList, StyleSheet, View } from "react-native";
-import { Navigation } from "../../navigation/types";
+import { useOrientation } from "../../hooks/useOrientation";
+import { useWindowDimensions, View, StyleSheet } from "react-native";
 import { RoundButton } from "../../components/Buttons/RoundButton";
 import PictogramButton from "../../components/PictogramButton";
-
+import ResponsiveGrid from "../../components/Layouts/ResponsiveGrid";
+import { SpaceTheme } from "../../styles/theme";
 
 export default function HomeScreen() {
+    const orientation = useOrientation();
+    const isLandscape = orientation === 'landscape';
+
     const {
         handleDelete,
         handleLongPress,
@@ -20,34 +23,47 @@ export default function HomeScreen() {
         selectedIds,
         toggleSelection,
     } = usePictogramStore();
-    console.log(pictograms)
+
     return (
-        <View>
-            <View style={styles.buttonWrapper}>
-                <RoundButton icon="add" onPress={handleAdd} />
+        <View >
+            <View style={[
+                styles.buttonWrapper,
+                isLandscape && styles.landscapeButtonWrapper
+            ]}>
+                <RoundButton
+                    backgroundColor={SpaceTheme.colors.nebulaEdgeDark}
+                    icon="add"
+                    iconColor={SpaceTheme.colors.deepSpace}
+                    borderColor={SpaceTheme.colors.white}
+                    borderWidth={2}
+                    onPress={handleAdd}
+                />
                 {isSelecting && (
                     <>
                         <RoundButton
+                            backgroundColor={SpaceTheme.colors.cosmicDust}
                             icon="edit"
-                            backgroundColor="#4CAF50"
+                            iconColor={SpaceTheme.colors.deepSpace}
+                            borderColor={SpaceTheme.colors.white}
+                            borderWidth={2}
                             onPress={() => {
                                 const pictoToEdit = pictograms.find(p => p.id === selectedIds[0]);
                                 if (pictoToEdit) handleEdit(pictoToEdit);
                             }}
                         />
                         <RoundButton
+                            backgroundColor={SpaceTheme.colors.cosmicDanger}
                             icon="delete"
-                            backgroundColor="red"
+                            iconColor={SpaceTheme.colors.deepSpace}
+                            borderColor={SpaceTheme.colors.white}
+                            borderWidth={2}
                             onPress={handleDelete}
                         />
                     </>
                 )}
             </View>
-            <FlatList
+            <ResponsiveGrid
                 data={pictograms}
-                keyExtractor={(picto) => picto.id}
-                numColumns={2}
-                contentContainerStyle={styles.grid}
                 renderItem={({ item }) => (
                     <PictogramButton
                         label={item.label}
@@ -64,10 +80,22 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, padding: 20 },
-    grid: { gap: 10 },
+    landscapeContainer: {
+        paddingHorizontal: 40,
+    },
+    tabletContainer: {
+        paddingVertical: 30,
+    },
     buttonWrapper: {
         flexDirection: 'row',
         justifyContent: 'flex-end',
+    },
+    landscapeButtonWrapper: {
+        marginBottom: 25,
+    },
+    grid: {
+    },
+    landscapeGrid: {
+        gap: 20
     }
 });
