@@ -16,6 +16,7 @@ export interface SpaceThemeType {
         transparent: string;
         cosmicDanger: string;
         cosmicDangerDark?: string;
+        backgroundColor: string;
     };
 
 }
@@ -42,6 +43,8 @@ export const SpaceTheme: SpaceThemeType = {
         gray: '#95a5a6',
         white: "#ffffff",
         black: "#000000",
-        transparent: 'transparent'
+        transparent: 'transparent',
+        backgroundColor: '#F5F2ED'
     },
 };
+

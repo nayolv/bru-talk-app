@@ -1,11 +1,11 @@
-import { Dimensions, FlatList, StyleSheet, useWindowDimensions, View, ViewStyle } from 'react-native';
+import { StyleSheet, useWindowDimensions, View, ViewStyle } from 'react-native';
 import { useOrientation } from '../../hooks/useOrientation';
 import { Pictogram } from '../../types/pictogramTypes';
+import { FlatList } from 'react-native-gesture-handler';
 
 interface ResponsiveGridProps {
     data: Pictogram[];
     renderItem: ({ item }: { item: Pictogram }) => React.JSX.Element;
-    style?: ViewStyle;
 }
 
 export default function ResponsiveGrid({ data, renderItem }: ResponsiveGridProps) {
@@ -31,39 +31,37 @@ export default function ResponsiveGrid({ data, renderItem }: ResponsiveGridProps
 
     const numColumns = calculateColumns();
     const columnWidth = (width - horizontalPadding - spacing * (numColumns - 1)) / numColumns;
-
     const renderItemWrapper = ({ item }: { item: any }) => (
-        <View style={{ width: columnWidth, alignItems: 'center' }}>
-            <View style={{ width: '100%', minWidth: 180, maxWidth: 240 }}>
+        <View style={{ width: columnWidth }}>
+            <View style={styles.itemContainer}>
                 {renderItem({ item })}
             </View>
         </View>
     );
 
     return (
-        <FlatList
-            key={`grid-${numColumns}`}
-            data={data}
-            keyExtractor={(item) => item.id}
-            numColumns={numColumns}
-            contentContainerStyle={[styles.grid]}
-            columnWrapperStyle={
-                numColumns > 1
-                    ? {
-                        justifyContent: data.length < numColumns ? 'center' : 'center',
-                    }
-                    : undefined
-            } renderItem={renderItemWrapper}
-            scrollEnabled={true}
-        />
+        <View style={styles.container}>
+            <FlatList
+                key={`key-${numColumns}`}
+                data={data}
+                keyExtractor={(item) => item.id}
+                renderItem={renderItemWrapper}
+                numColumns={numColumns}
+            />
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
-    grid: {
-        padding: 20,
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
-    row: {
-        borderWidth: 5,
-    },
+    itemContainer: {
+        width: '100%',
+        minWidth: 190,
+        maxWidth: 240,
+        minHeight: 190
+    }
 });

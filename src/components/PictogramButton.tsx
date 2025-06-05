@@ -1,14 +1,13 @@
-import { TouchableOpacity, Text, StyleSheet, Image, Dimensions, useWindowDimensions, View } from 'react-native';
 import * as Speech from 'expo-speech';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { TouchableOpacity, Text, StyleSheet, Image, Dimensions, useWindowDimensions, View } from 'react-native';
 import { SpaceTheme } from '../styles/theme';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 type PictogramButtonProps = {
     label: string;
     imgUrl?: string;
     isSelected?: boolean;
     isSelecting?: boolean;
-    onLongPress?: () => void;
     onSelect?: () => void;
 };
 
@@ -17,7 +16,6 @@ export default function PictogramButton({
     imgUrl,
     isSelected,
     isSelecting,
-    onLongPress,
     onSelect,
 }: PictogramButtonProps) {
     const { width, height } = useWindowDimensions();
@@ -37,7 +35,6 @@ export default function PictogramButton({
     return (
         <TouchableOpacity
             onPress={handlePress}
-            onLongPress={onLongPress}
             style={[
                 styles.button,
                 isSelected ? styles.selected : null,
@@ -45,7 +42,15 @@ export default function PictogramButton({
             ]}
         >
             <View style={styles.imgContainer}>
-                {imgUrl && <Image source={{ uri: imgUrl }} style={styles.image} />}
+                {imgUrl ?
+                    <Image source={{ uri: imgUrl }} style={styles.image} />
+                    :
+                    <Image
+                        source={require('../../assets/no-image.png')}
+                        style={styles.imagePreview}
+                        resizeMode="contain"
+                    />
+                }
             </View>
             <Text style={styles.text}>{label}</Text>
             {isSelecting && (
@@ -59,12 +64,16 @@ export default function PictogramButton({
         </TouchableOpacity>
     );
 }
+
 const styles = StyleSheet.create({
     button: {
         flex: 1,
         aspectRatio: 1,
         backgroundColor: SpaceTheme.colors.nebulaEdge,
-        margin: 8,
+        marginTop: 10,
+        marginBottom: 10,
+        marginLeft: 6,
+        marginRight: 6,
         borderRadius: 12,
         borderColor: SpaceTheme.colors.white,
         borderWidth: 5,
@@ -84,16 +93,24 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: SpaceTheme.colors.black,
         fontWeight: 'bold',
+        textTransform: 'capitalize'
     },
     imgContainer: {
-        width: '78%',
-        height: '78%',
+        width: '90%',
+        height: '75%',
         margin: 0,
+
     },
     image: {
         width: '100%',
         height: '100%',
-        borderRadius: 8,
+        borderRadius: 12,
+        borderColor: SpaceTheme.colors.cosmicDust,
+        borderWidth: 3,
+    },
+    imagePreview: {
+        width: '100%',
+        height: '100%',
     },
     selected: {
         borderColor: SpaceTheme.colors.borders,
@@ -102,7 +119,7 @@ const styles = StyleSheet.create({
     },
     checkIcon: {
         position: 'absolute',
-        top: -5,
-        right: -5,
+        top: -15,
+        right: -10,
     },
 });

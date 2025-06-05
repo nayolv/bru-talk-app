@@ -7,6 +7,7 @@ type MaterialIconName = ComponentProps<typeof MaterialIcons>['name'];
 
 type RoundButtonProps = {
     onPress: () => void;
+    onLongPress?: () => void;
     text?: string;
     textColor?: string;
     textSize?: number;
@@ -16,7 +17,9 @@ type RoundButtonProps = {
     iconSize?: number;
     disabled?: boolean;
     borderColor?: string;
-    borderWidth?: number
+    borderWidth?: number;
+    width?: number;
+    height?: number;
 }
 
 export const RoundButton = ({
@@ -30,7 +33,10 @@ export const RoundButton = ({
     iconSize = 24,
     disabled = false,
     borderColor = 'none',
-    borderWidth = 0
+    borderWidth = 0,
+    onLongPress,
+    width = 50,
+    height = 50,
 }: RoundButtonProps) => {
     return (
         <TouchableOpacity
@@ -41,8 +47,11 @@ export const RoundButton = ({
                     opacity: disabled ? 0.6 : 1,
                     borderWidth,
                     borderColor,
+                    width,
+                    height,
                 }
             ]}
+            onLongPress={onLongPress}
             onPress={onPress}
             disabled={disabled}
             activeOpacity={0.7}
@@ -66,14 +75,11 @@ export const RoundButton = ({
 
 const styles = StyleSheet.create({
     buttonContainer: {
-        minWidth: 50,
-        minHeight: 50,
         borderRadius: 25,
         justifyContent: 'center',
         alignItems: 'center',
-        margin: 5,
         flexDirection: 'row',
-        paddingHorizontal: 12,
+        margin: 5,
         elevation: 3,
         shadowColor: SpaceTheme.colors.black,
         shadowOffset: { width: 0, height: 2 },
