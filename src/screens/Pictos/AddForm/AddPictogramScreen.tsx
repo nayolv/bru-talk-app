@@ -12,7 +12,7 @@ import { Categories } from './Categories';
 export default function AddPictogramScreen({ route }: AddPictogramScreenProps) {
     const { pictoToEdit } = route.params || {};
     const { label, imgUrl, handlers, } = usePictogramHandler(pictoToEdit);
-    const { categoryProps } = useCategoriesHandler();
+    const { categoryProps } = useCategoriesHandler(pictoToEdit);
 
     const buttonsProps = {
         ...handlers,

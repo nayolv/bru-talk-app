@@ -10,9 +10,10 @@ export type Pictogram = {
 
 export type CategoryState = {
     availableCategories: string[];
-    addCategory: (name: string) => void;
-    removeCategory: (name: string) => void;
-    renameCategory: (oldName: string, newName: string) => void;
+    addCategory: (category: string) => void;
+    editCategory: (coldName: string, newName: string) => void;
+    deleteCategory: (category: string) => void;
+    resetCategories: () => void;
 };
 
 export type PictogramState = {

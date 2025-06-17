@@ -1,12 +1,12 @@
 import { ComponentProps } from "react";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { DimensionValue, StyleSheet, Text, TouchableOpacity } from "react-native";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { SpaceTheme } from "../../styles/theme";
 
 type MaterialIconName = ComponentProps<typeof MaterialIcons>['name'];
 
 type RoundButtonProps = {
-    onPress: () => void;
+    onPress?: () => void;
     onLongPress?: () => void;
     text?: string;
     textColor?: string;
@@ -18,8 +18,10 @@ type RoundButtonProps = {
     disabled?: boolean;
     borderColor?: string;
     borderWidth?: number;
-    width?: number;
-    height?: number;
+    width?: number | DimensionValue;
+    height?: number | DimensionValue;
+    minWidth?: number | DimensionValue;
+    minHeight?: number | DimensionValue;
 }
 
 export const RoundButton = ({
@@ -37,6 +39,8 @@ export const RoundButton = ({
     onLongPress,
     width = 50,
     height = 50,
+    minWidth = 50,
+    minHeight = 50,
 }: RoundButtonProps) => {
     return (
         <TouchableOpacity
@@ -49,6 +53,8 @@ export const RoundButton = ({
                     borderColor,
                     width,
                     height,
+                    minWidth,
+                    minHeight
                 }
             ]}
             onLongPress={onLongPress}
@@ -84,6 +90,7 @@ const styles = StyleSheet.create({
         shadowColor: SpaceTheme.colors.black,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
+        padding: 10,
     },
     buttonText: {
         fontWeight: '600',

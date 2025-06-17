@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { DEFAULT_CATEGORY } from '../types/pictogramTypes';
 import { usePictogramStore } from '../stores/usePictogramStore';
 
@@ -15,9 +15,6 @@ export const useFilterCategory = () => {
     }, [pictograms]);
 
     const filteredPictograms = useMemo(() => {
-        if (selectedCategory === DEFAULT_CATEGORY) {
-            return pictograms.filter(p => !p.categories || p.categories.length === 0);
-        }
         return pictograms.filter(p => p.categories?.includes(selectedCategory));
     }, [pictograms, selectedCategory]);
 

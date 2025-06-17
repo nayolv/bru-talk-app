@@ -35,15 +35,28 @@ export const usePictogramHandler = (pictoToEdit?: Pictogram) => {
 
     const handleDelete = () => {
         if (selectedIds.length === 0) return;
-        deletePictograms(selectedIds);
-        clearSelection();
+
+        Alert.alert(
+            '¿Eliminar pictogramas?',
+            `Se eliminarán ${selectedIds.length} pictogramas. ¿Deseas continuar?`,
+            [
+                { text: 'Cancelar', style: 'cancel' },
+                {
+                    text: 'Eliminar',
+                    style: 'destructive',
+                    onPress: () => {
+                        deletePictograms(selectedIds);
+                        clearSelection();
+                    },
+                },
+            ]
+        );
     };
 
     const handleEdit = (filteredPictograms: Pictogram[]) => {
         const picto = filteredPictograms.find(p => p.id === selectedIds[0]);
 
         if (!picto) return;
-        console.log("Editing pictogram:", picto);
         navigation.navigate('AddPictogram', { pictoToEdit: picto });
         clearSelection();
     };
@@ -59,12 +72,18 @@ export const usePictogramHandler = (pictoToEdit?: Pictogram) => {
 
     const handleSubmit = (categories: string[]) => {
         if (!label.trim()) return Alert.alert("Error", "El nombre es requerido");
+
         if (pictograms.some(p => p.label === label.trim() && p.id !== pictoToEdit?.id)) {
             return Alert.alert("Error", "¡Este nombre ya existe!");
-        }
+        };
+
+
         if (pictoToEdit) {
             updatePicto({
-                ...pictoToEdit, label, imgUrl, categories,
+                ...pictoToEdit,
+                label,
+                imgUrl,
+                categories,
             });
         } else {
             addPicto({
@@ -74,7 +93,6 @@ export const usePictogramHandler = (pictoToEdit?: Pictogram) => {
                 categories,
             });
         }
-
         navigation.goBack();
     }
 

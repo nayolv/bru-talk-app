@@ -1,16 +1,22 @@
 import { useState } from "react";
-import { DEFAULT_CATEGORY } from "../types/pictogramTypes";
 import { Alert } from "react-native";
+import { usePictogramStore } from "../stores/usePictogramStore";
+import { DEFAULT_CATEGORY, Pictogram } from "../types/pictogramTypes";
 
-export const useCategoriesHandler = () => {
-    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-    const [availableCategories, setAvailableCategories] = useState<string[]>([DEFAULT_CATEGORY]);
+export const useCategoriesHandler = (pictoToEdit?: Pictogram) => {
+    const [selectedCategories, setSelectedCategories] = useState<string[]>(pictoToEdit?.categories || [DEFAULT_CATEGORY]);
     const [newCategory, setNewCategory] = useState('');
-    const categories = selectedCategories.length > 0 ? selectedCategories : [DEFAULT_CATEGORY]
+
+    const availableCategories = usePictogramStore((state) => state.availableCategories);
+    const addCategory = usePictogramStore((state) => state.addCategory);
+    const editCategory = usePictogramStore((state) => state.editCategory);
+    const deleteCategory = usePictogramStore((state) => state.deleteCategory);
+
+    const categories = selectedCategories.length > 0 ? selectedCategories : [DEFAULT_CATEGORY];
 
     const handleAddCategory = () => {
         if (newCategory.trim() && !availableCategories.includes(newCategory)) {
-            setAvailableCategories([...availableCategories, newCategory]);
+            addCategory(newCategory);
             setSelectedCategories([...selectedCategories, newCategory]);
             setNewCategory('');
         }
@@ -20,19 +26,44 @@ export const useCategoriesHandler = () => {
     const handleSelectedCategories = (categories: string[]) => setSelectedCategories(categories);
 
     const handlePress = (category: string) => {
+        if (category === DEFAULT_CATEGORY) return;
         if (selectedCategories.includes(category)) {
-            handleSelectedCategories(selectedCategories.filter(c => c !== category));
+            handleSelectedCategories(selectedCategories.filter((c) => c !== category));
         } else {
             handleSelectedCategories([...selectedCategories, category]);
         }
     };
 
-    const handleDeleteCategory = (category: string) => {
-        setAvailableCategories(availableCategories.filter(c => c !== category));
+    const handleEditCategory = (oldCategory: string) => {
+        if (oldCategory === DEFAULT_CATEGORY) return;
+
+        Alert.alert(
+            'Editar categoría',
+            `Modificar "${oldCategory}" por:`,
+            [
+                {
+                    text: 'Cancelar',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Guardar',
+                    onPress: (newName) => {
+                        const safeName = (newName ?? '').trim();
+                        if (safeName && safeName !== oldCategory) {
+                            editCategory(oldCategory, safeName);
+                            setSelectedCategories((prev) =>
+                                prev.map((c) => (c === oldCategory ? safeName : c))
+                            );
+                        }
+                    },
+                },
+            ],
+        );
     };
 
+
     const handleLongPress = (category: string) => {
-        if (handleDeleteCategory && category !== DEFAULT_CATEGORY) {
+        if (category !== 'Todos') {
             Alert.alert(
                 "Eliminar categoría",
                 `¿Quieres eliminar "${category}"?`,
@@ -41,28 +72,28 @@ export const useCategoriesHandler = () => {
                     {
                         text: "Eliminar",
                         onPress: () => {
-                            handleDeleteCategory(category);
+                            deleteCategory(category);
                             if (selectedCategories.includes(category)) {
-                                handleSelectedCategories(selectedCategories.filter(c => c !== category));
+                                handleSelectedCategories(selectedCategories.filter((c) => c !== category));
                             }
-                        }
-                    }
+                        },
+                    },
                 ]
             );
         }
     };
 
-    const categoryProps = {
-        categories,
-        newCategory,
-        availableCategories,
-        selectedCategories,
-        handleCategoryChange,
-        handleAddCategory,
-        handlePress,
-        handleLongPress,
-    }
     return {
-        categoryProps,
-    }
-}
+        categoryProps: {
+            categories,
+            newCategory,
+            availableCategories,
+            selectedCategories,
+            handleCategoryChange,
+            handleAddCategory,
+            handlePress,
+            handleLongPress,
+            handleEditCategory,
+        },
+    };
+};

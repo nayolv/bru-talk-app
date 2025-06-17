@@ -1,13 +1,13 @@
 import { StateCreator } from "zustand";
-import { Pictogram, PictogramState, SelectionState } from "../types/pictogramTypes";
+import { DEFAULT_CATEGORY, Pictogram, PictogramState, SelectionState } from "../types/pictogramTypes";
 import { createJSONStorage, persist, PersistOptions } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const initialState: Pictogram[] = [
-    { id: '1', label: 'Agua', categories: ['Todos'] },
-    { id: '2', label: 'Comida', categories: ['Todos'] },
-    { id: '3', label: 'Baño', categories: ['Todos'] },
-    { id: '4', label: 'Dormir', categories: ['Todos'] },
+    { id: '1', label: 'Agua', categories: [DEFAULT_CATEGORY] },
+    { id: '2', label: 'Comida', categories: [DEFAULT_CATEGORY] },
+    { id: '3', label: 'Baño', categories: [DEFAULT_CATEGORY] },
+    { id: '4', label: 'Dormir', categories: [DEFAULT_CATEGORY] },
 ]
 
 type PersistedPictogramState = {

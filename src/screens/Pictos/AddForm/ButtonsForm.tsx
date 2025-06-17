@@ -19,6 +19,7 @@ export const ButtonsForm = ({
     handlePickImage,
     handleSubmit
 }: ButtonsFormProps) => {
+
     return (
         <View>
             <TouchableOpacity

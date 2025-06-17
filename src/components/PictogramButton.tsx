@@ -1,7 +1,8 @@
 import * as Speech from 'expo-speech';
-import { TouchableOpacity, Text, StyleSheet, Image, Dimensions, useWindowDimensions, View } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, Image, Dimensions, useWindowDimensions, View, Alert } from 'react-native';
 import { SpaceTheme } from '../styles/theme';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { useAppMode } from '../stores/useAppMode';
 
 type PictogramButtonProps = {
     label: string;
@@ -20,18 +21,29 @@ export default function PictogramButton({
 }: PictogramButtonProps) {
     const { width, height } = useWindowDimensions();
     const isLandscape = width > height;
+    const { mode, setMode } = useAppMode();
 
-    const speak = () => {
-        Speech.speak(label);
-    };
+    const speak = () => Speech.speak(label);
 
     const handlePress = () => {
-        if (isSelecting) {
-            onSelect?.();
-        } else {
-            speak();
+        if (isSelecting) return onSelect?.();
+        if (mode === 'config') {
+            return Alert.alert(
+                "Debes activar modo seguro para continuar.",
+                "¿Deseas activarlo ahora o continuar con la seleccion?",
+                [
+                    { text: "Cancelar", style: "cancel" },
+                    {
+                        text: "Activar Modo Seguro",
+                        onPress: () => setMode("safe")
+                    }
+                ]
+            )
         }
+
+        speak();
     };
+
     return (
         <TouchableOpacity
             onPress={handlePress}
