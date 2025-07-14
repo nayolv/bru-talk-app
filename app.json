@@ -4,13 +4,12 @@
     "slug": "comunicador-app",
     "version": "1.0.0",
     "orientation": "default",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "icon": "./assets/astro.png",
     "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "image": "./assets/astro.png",
+      "resizeMode": "contain"
     },
     "ios": {
       "supportsTablet": true,
@@ -22,7 +21,8 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "softwareKeyboardLayoutMode": "pan"
+      "softwareKeyboardLayoutMode": "pan",
+      "package": "com.anonymous.comunicadorapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
