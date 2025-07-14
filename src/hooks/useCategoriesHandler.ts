@@ -7,10 +7,12 @@ export const useCategoriesHandler = (pictoToEdit?: Pictogram) => {
     const [selectedCategories, setSelectedCategories] = useState<string[]>(pictoToEdit?.categories || [DEFAULT_CATEGORY]);
     const [newCategory, setNewCategory] = useState('');
 
-    const availableCategories = usePictogramStore((state) => state.availableCategories);
-    const addCategory = usePictogramStore((state) => state.addCategory);
-    const editCategory = usePictogramStore((state) => state.editCategory);
-    const deleteCategory = usePictogramStore((state) => state.deleteCategory);
+    const {
+        availableCategories,
+        addCategory,
+        editCategory,
+        deleteCategory
+    } = usePictogramStore();
 
     const categories = selectedCategories.length > 0 ? selectedCategories : [DEFAULT_CATEGORY];
 
@@ -60,7 +62,6 @@ export const useCategoriesHandler = (pictoToEdit?: Pictogram) => {
             ],
         );
     };
-
 
     const handleLongPress = (category: string) => {
         if (category !== 'Todos') {
