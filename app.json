@@ -6,9 +6,9 @@
     "orientation": "default",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
-    "icon": "./assets/astro.png",
+    "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/astro.png",
+      "image": "./assets/icon.png",
       "resizeMode": "contain"
     },
     "ios": {
@@ -26,6 +26,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "69a0892e-60eb-49f0-9422-9a93fd0eb1f2"
+      }
     }
   }
 }
